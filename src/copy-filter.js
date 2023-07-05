@@ -71,6 +71,7 @@ function userPathFilter (opts) {
   const filterFunc = generateFilterFunction(opts.ignore || [])
   const ignoredOutDirs = generateIgnoredOutDirs(opts)
   const pruner = opts.prune ? new prune.Pruner(opts.dir, opts.quiet) : null
+  const basedir = path.resolve(opts.dir);
 
   return async function filter (file) {
     const fullPath = path.resolve(file)
@@ -85,7 +86,7 @@ function userPathFilter (opts) {
       }
     }
 
-    let name = fullPath.split(path.resolve(opts.dir))[1]
+    let name = fullPath.startsWith(basedir) ? fullPath.substring(basedir.length): fullPath;
 
     if (path.sep === '\\') {
       name = common.normalizePath(name)
